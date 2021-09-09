@@ -62,3 +62,7 @@ p {
     background-color: #2196F3;
     color: white;
 }
+
+.hidden {
+    display: none;
+}
