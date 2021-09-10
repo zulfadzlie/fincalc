@@ -70,7 +70,7 @@ function checkInput (input_value){
         return 0
     }
     else {
-        return parseInt(input_value)
+        return parseFloat(input_value)
     }
 }
 
