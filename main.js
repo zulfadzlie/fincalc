@@ -1,9 +1,9 @@
 let mode = "PMT"
-let input_PMT = document.getElementById("input-value-PMT").value
-let input_RATE = document.getElementById("input-value-RATE").value
-let input_NPER = document.getElementById("input-value-NPER").value
-let input_PV = document.getElementById("input-value-PV").value
-let input_FV = document.getElementById("input-value-FV").value
+let input_PMT = checkInput(document.getElementById("input-value-PMT").value)
+let input_RATE = checkInput(document.getElementById("input-value-RATE").value)
+let input_NPER = checkInput(document.getElementById("input-value-NPER").value)
+let input_PV = checkInput(document.getElementById("input-value-PV").value)
+let input_FV = checkInput(document.getElementById("input-value-FV").value)
 let begin_or_end = "BEGIN"
 
 function radioSelected(selected) {
@@ -25,7 +25,7 @@ function showAllInputs() {
 }
 
 function calculatePMT() {
-    let calculated_PMT = (input_FV - input_PV * Math.pow(1 + input_RATE/100, input_NPER)) * input_RATE/100 / (1 - Math.pow(1 + input_RATE/100, input_NPER))
+    let calculated_PMT = (input_FV + input_PV * Math.pow(1 + input_RATE/100, input_NPER)) * input_RATE/100 / (1 - Math.pow(1 + input_RATE/100, input_NPER))
 
     if (begin_or_end === "BEGIN") {
         calculated_PMT = calculated_PMT / (1 + input_RATE/100)
@@ -35,14 +35,25 @@ function calculatePMT() {
 }
 
 function calculatePV() {
-    let calculated_PV = input_PMT / (input_RATE/100) * (1 - 1 / Math.pow(1 + input_RATE/100, input_NPER)) + input_FV / Math.pow(1 + input_RATE/100, input_NPER)
+    let calculated_PV = input_PMT / (input_RATE/100) * (1 / Math.pow(1 + input_RATE/100, input_NPER) - 1) - input_FV / Math.pow(1 + input_RATE/100, input_NPER)
 
     if (begin_or_end === "BEGIN") {
-        calculated_PV = input_PMT / (input_RATE/100) * (1 - 1 / Math.pow(1 + input_RATE/100, input_NPER)) * (1 + input_RATE/100) + input_FV / Math.pow(1 + input_RATE/100, input_NPER)
+        calculated_PV = input_PMT / (input_RATE/100) * (1 / Math.pow(1 + input_RATE/100, input_NPER) - 1) * (1 + input_RATE/100) - input_FV / Math.pow(1 + input_RATE/100, input_NPER)
     }
 
     return calculated_PV
 }
+
+function calculateFV() {  
+    let calculated_FV = input_PMT / (input_RATE/100) * (1 - Math.pow(1 + input_RATE/100, input_NPER)) - input_PV * Math.pow(1 + input_RATE/100, input_NPER)
+
+    if (begin_or_end === "BEGIN") {
+        calculated_FV = input_PMT / (input_RATE/100) * (1 - Math.pow(1 + input_RATE/100, input_NPER)) * (1 + input_RATE/100) - input_PV * Math.pow(1 + input_RATE/100, input_NPER)
+    }
+
+    return calculated_FV
+}
+
 
 function printError() {
     document.getElementById("answer").textContent = "ERROR: PLEASE INSPECT INPUTS"
@@ -54,22 +65,12 @@ function printAnswer(answer) {
     document.getElementById("answer").textContent = mode + " = " + answer
 }
 
-function calculateFV() {  
-    let calculated_FV = input_PMT / (input_RATE/100) * (Math.pow(1 + input_RATE/100, input_NPER) - 1) + input_PV * Math.pow(1 + input_RATE/100, input_NPER)
-
-    if (begin_or_end === "BEGIN") {
-        calculated_FV = input_PMT / (input_RATE/100) * (Math.pow(1 + input_RATE/100, input_NPER) - 1) * (1 + input_RATE/100) + input_PV * Math.pow(1 + input_RATE/100, input_NPER)
-    }
-
-    return calculated_FV
-}
-
 function checkInput (input_value){
     if (input_value === "") {
         return 0
     }
     else {
-        return input_value
+        return parseInt(input_value)
     }
 }
 
